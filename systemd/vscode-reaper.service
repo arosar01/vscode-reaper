@@ -1,0 +1,6 @@
+[Unit]
+Description=Terminate VS Code and Cursor remote server processes on this host
+
+[Service]
+Type=oneshot
+ExecStart=/opt/vscode-reaper/vscode-reaper.sh --kill
