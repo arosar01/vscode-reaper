@@ -95,4 +95,4 @@ See [`systemd/README.md`](systemd/README.md) for details.
 
 ## Maintainer
  
-[UBC Advanced Research Computing (ARC)](https://arc.ubc.ca)
+[University of British Columbia Advanced Research Computing (UBC ARC)](https://arc.ubc.ca)
