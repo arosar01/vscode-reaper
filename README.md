@@ -11,7 +11,7 @@ VS Code Remote-SSH and Cursor install persistent server components (`.vscode-ser
 - **Report mode** (no args): prints matching processes and takes no action.
 - **Kill mode** (`--kill`): sends `SIGKILL` to matching processes, with no graceful shutdown. Must run as root.
 
-Kill mode is not scoped to a single user; it terminates any matching process on the host except users listed in `EXCLUDE_USERS`. Multiple passes help catch matching processes and components that restart shortly after termination.
+Kill mode is not scoped to a single user; it terminates any matching process on the host except users listed in `EXCLUDE_USERS`. Multiple passes help catch matching processes that are recreated during the same cleanup run.
 
 ## Usage
 
@@ -71,11 +71,11 @@ and filters it with `awk`:
 
 - Excludes its own PID and its parent process.
 - Excludes any user matching `EXCLUDE_RE`.
-- Matches remaining process record against `PAT`.
+- Matches the full process record, including command-line arguments, against `PAT`.
 
 `PATH` is hardcoded to a fixed set of system directories at the top of the script, so it does not depend on the caller's environment.
 
-Each kill pass re-scans the process table from scratch rather than tracking PIDs from the first scan, so processes that restart mid-run are also terminated in a later pass.
+Each kill pass re-scans the process table from scratch rather than tracking PIDs from the first scan, so newly created matching processes can also be terminated in a later pass.
 
 ## Exit codes
 
@@ -85,7 +85,7 @@ Each kill pass re-scans the process table from scratch rather than tracking PIDs
 | `1` | `--kill` was requested without root privileges |
 | `2` | The first argument was neither empty nor `--kill` |
 
-Individual `kill` command failures are not reported, and there is no verification pass after the last kill pass. Run the script again in report mode to confirm no matching processes remain.
+Individual `kill` command failures are not treated as fatal, and there is no verification pass after the last kill pass. Run the script again in report mode to confirm no matching processes remain.
 
 ## Scheduled execution
 
